@@ -42,15 +42,14 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries",
     "Typing :: Typed",
 ]
 authors = [
-    { name = "maoshen" }
+    { name = "MCmaoshen" }
 ]
 maintainers = [
-    { name = "maoshen" }
+    { name = "MCmaoshen" }
 ]
 dependencies = [
     "pympler>=1.0"
@@ -62,6 +61,12 @@ dev = [
     "twine",
 ]
 
+[project.urls]
+Homepage = "https://github.com/MCmaoshen/typemore"
+Repository = "https://github.com/MCmaoshen/typemore"
+Issues = "https://github.com/MCmaoshen/typemore/issues"
+Changelog = "https://github.com/MCmaoshen/typemore/blob/main/CHANGELOG.md"
+
 [tool.hatch.build.targets.wheel]
 packages = ["typemore"]
 
@@ -69,4 +74,5 @@ packages = ["typemore"]
 include = [
     "/typemore",
     "/README.md",
+    "/CHANGELOG.md",
 ]

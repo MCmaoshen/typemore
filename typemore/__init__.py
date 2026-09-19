@@ -15,7 +15,7 @@ from .types.timeLimit import TimeLimit, TimeLimitError
 from .types.memLimit import MemLimit, MemLimitError
 
 __version__ = "0.1.1"
-__author__ = "maoshen"
+__author__ = "MCmaoshen"
 __all__ = ["Range",
            "Point2D",
            "Point3D",
