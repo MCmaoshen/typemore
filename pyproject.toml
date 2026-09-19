@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "typemore"
+version = "0.1.1"
+description = "A collection of custom Python data types for specialized behavior."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = [
+    "typemore",
+    "type",
+    "more",
+    "Range",
+    "Point2D",
+    "Point3D",
+    "PointAnyD",
+    "Auto",
+    "Debug",
+    "StrictFloat",
+    "Interval",
+    "ChainNode",
+    "InfiniteIterator",
+    "ReadOnlyBox",
+    "DisplayProxy",
+    "LenLimit",
+    "LenLimitError",
+    "TimeLimit",
+    "TimeLimitError",
+    "MemLimit",
+    "MemLimitError"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
+authors = [
+    { name = "maoshen" }
+]
+maintainers = [
+    { name = "maoshen" }
+]
+dependencies = [
+    "pympler>=1.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "twine",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["typemore"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/typemore",
+    "/README.md",
+]
