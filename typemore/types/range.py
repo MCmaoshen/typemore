@@ -86,7 +86,7 @@ class Range:
     def range_add(self, other: Range | int | float):
         """Combine this range with another range or a number.
 
-            With a number, return a Range with the same length shifted by that
+            With a number, expand the range outward on both ends by that
             amount. With another Range, return the smallest Range covering both.
             """
         if not isinstance(other, Range | int | float):
@@ -124,8 +124,8 @@ class Range:
         if isinstance(other, int | float):
             end_start = self.start + other
             end_end = self.end - other
-            if end_start > self.end:
-                raise ValueError(f"start {end_start} is greater than end {self.start}")
+            if end_start > end_end:
+                raise ValueError(f"start {end_start} is greater than end {end_end}")
             return Range(end_start, end_end)
 
         if other.start <= self.start and other.end >= self.end:
@@ -133,9 +133,9 @@ class Range:
 
         if self.start < other.start and self.end > other.end:
             return Range(self.start, other.start), Range(other.end, self.end)
-        elif self.start < other.start and self.end < other.end:
+        elif self.start <= other.start and self.end <= other.end:
             return Range(self.start, other.start)
-        elif self.start > other.start and self.end > other.end:
+        elif self.start >= other.start and self.end >= other.end:
             return Range(other.start, self.end)
         return None
 
@@ -205,7 +205,7 @@ class Range:
         if not isinstance(other, Range | int | float):
             return NotImplemented
         if isinstance(other, int | float):
-            return Range(self.start - other, self.start - other)
+            return Range(self.start - other, self.end - other)
         return Range(self.start - other.start, self.end - other.end)
 
     def __mul__(self, other: Range | int | float):
@@ -247,25 +247,4 @@ class Range:
         return self
 
     def __neg__(self):
-        return Range(-self.start, -self.end)
-
-    def __radd__(self, other: Range | int | float):
-        return self.__add__(other)
-
-    def __rsub__(self, other: Range | int | float):
-        return self.__sub__(other)
-
-    def __rmul__(self, other: Range | int | float):
-        return self.__mul__(other)
-
-    def __rtruediv__(self, other: Range | int | float):
-        return self.__truediv__(other)
-
-    def __rfloordiv__(self, other: Range | int | float):
-        return self.__floordiv__(other)
-
-    def __rmod__(self, other: Range | int | float):
-        return self.__mod__(other)
-
-    def __rpow__(self, other: Range | int | float):
-        return self.__pow__(other)
+        return Range(-self.end, -self.start)

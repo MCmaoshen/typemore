@@ -22,7 +22,7 @@ Interval(True, 1, 5, False)           # [1, 5)
 
 ## Types
 
-- `StrictFloat` — a float subclass that does arithmetic with Decimal
+- `StrictFloat` — a float type that avoids floating-point errors in a single operation
 - `Range` — a closed numeric interval
 - `Interval` — an interval with open or closed endpoints
 - `Point2D` / `Point3D` / `PointAnyD` — points with element-wise operations

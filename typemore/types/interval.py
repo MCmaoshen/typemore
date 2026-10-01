@@ -23,7 +23,7 @@ class Interval:
             >>> Interval(True, 1, 5, False).interval_add(Interval(True, 0, 4, True))
             Interval(True, 0, 5, True)
         """
-    __slots__ = ("left", "start", "end", "right", "left_state", "right_state")
+    __slots__ = ("left", "start", "end", "right")
 
     def __init__(self, left: bool,  start: int | float, end: int | float, right: bool):
         super().__setattr__("left", left)
@@ -36,7 +36,7 @@ class Interval:
             raise ValueError(f"single point interval must be a closed interval")
 
     def __repr__(self):
-        return f"Interval({self.start}, {self.end})"
+        return f"Interval({self.left}, {self.start}, {self.end}, {self.right})"
 
     def __str__(self):
         str_left = '[' if self.left else '('
@@ -53,8 +53,6 @@ class Interval:
         elif name in ("left", "right"):
             if not isinstance(value, bool):
                 raise TypeError(f"{name} must be bool")
-        elif name in ("left_state", "right_state"):
-            raise AttributeError(f"can't set attribute '{name}'")
         super().__setattr__(name, value)
 
     def __delattr__(self, item):
@@ -69,10 +67,12 @@ class Interval:
 
             This is a private helper. Do not call it from outside the class.
             """
-        object.__setattr__(self, "left_state", 'close' if self.left else 'open')
-        object.__setattr__(self, "right_state", 'close' if self.right else 'open')
-        object.__setattr__(other, "left_state", 'close' if other.left else 'open')
-        object.__setattr__(other, "right_state", 'close' if other.right else 'open')
+        return (
+            'close' if self.left else 'open',
+            'close' if self.right else 'open',
+            'close' if other.left else 'open',
+            'close' if other.right else 'open'
+        )
 
     def interval_eq(self, other: Interval) -> bool:
         """Return True if both intervals have the same length and the same
@@ -198,8 +198,8 @@ class Interval:
         if isinstance(other, int | float):
             end_start = self.start + other
             end_end = self.end - other
-            if end_start > self.end:
-                raise ValueError(f"start {end_start} is greater than end {self.start}")
+            if end_start > end_end:
+                raise ValueError(f"start {end_start} is greater than end {end_end}")
             return Interval(self.left, end_start, end_end, self.right)
         if self.start < other.start and self.end > other.end:
             return Interval(self.left, self.start, other.start, not other.left), Interval(not other.right, other.end, self.end, self.right)
@@ -261,8 +261,8 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start + other.start, self.end + other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} + {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} + {other_left}, {other_right}")
 
     def __sub__(self, other: Interval | int | float):
         if not isinstance(other, Interval | int | float):
@@ -272,8 +272,8 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start - other.start, self.end - other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} - {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} - {other_left}, {other_right}")
 
     def __mul__(self, other: Interval | int | float):
         if not isinstance(other, Interval | int | float):
@@ -283,8 +283,8 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start * other.start, self.end * other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} * {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} * {other_left}, {other_right}")
 
     def __truediv__(self, other: Interval | int | float):
         if not isinstance(other, Interval | int | float):
@@ -294,8 +294,8 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start / other.start, self.end / other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} / {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} / {other_left}, {other_right}")
 
     def __floordiv__(self, other: Interval | int | float):
         if not isinstance(other, Interval | int | float):
@@ -305,8 +305,8 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start // other.start, self.end // other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} // {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} // {other_left}, {other_right}")
 
     def __mod__(self, other: Interval | int | float):
         if not isinstance(other, Interval | int | float):
@@ -316,8 +316,8 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start % other.start, self.end % other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} % {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} % {other_left}, {other_right}")
 
     def __pow__(self, other: Interval | int | float):
         if not isinstance(other, Interval | int | float):
@@ -327,32 +327,17 @@ class Interval:
         if self.left == other.left and self.right == other.right:
             return Interval(self.left, self.start ** other.start, self.end ** other.end, self.right)
         else:
-            self._state(other)
-            raise ValueError(f"different interval types: {self.left_state}, {self.right_state} ** {other.left_state}, {other.right_state}")
+            self_left, self_right, other_left, other_right = self._state(other)
+            raise ValueError(f"different interval types: {self_left}, {self_right} ** {other_left}, {other_right}")
 
     def __pos__(self) -> 'Interval':
         return self
 
     def __neg__(self) -> 'Interval':
-        return Interval(self.left, -self.start, -self.end, self.right)
+        return Interval(self.right, -self.end, -self.start, self.left)
 
-    def __radd__(self, other: Interval | int | float):
-        return self.__add__(other)
 
-    def __rsub__(self, other: Interval | int | float):
-        return self.__sub__(other)
+a = Interval(True, 1, 20, True)
+b = Interval(True, -10, 200, False)
 
-    def __rmul__(self, other: Interval | int | float):
-        return self.__mul__(other)
-
-    def __rtruediv__(self, other: Interval | int | float):
-        return self.__truediv__(other)
-
-    def __rfloordiv__(self, other: Interval | int | float):
-        return self.__floordiv__(other)
-
-    def __rmod__(self, other: Interval | int | float):
-        return self.__mod__(other)
-
-    def __rpow__(self, other: Interval | int | float):
-        return self.__pow__(other)
+print(a+b)

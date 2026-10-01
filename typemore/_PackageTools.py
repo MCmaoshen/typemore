@@ -1,6 +1,8 @@
 import sys
+from functools import wraps
 
 def private(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         caller_qualname = sys._getframe(1).f_code.co_qualname
         method_qualname = func.__qualname__

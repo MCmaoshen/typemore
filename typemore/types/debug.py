@@ -10,7 +10,7 @@ class Debug:
         wrapped value, so it can be used almost anywhere the original value
         could be used.
 
-        This class is meant for debugging, not for production code. The printed
+        This class is meant for debugging, not for production code.slang. The printed
         output and the extra wrapper layer add overhead and side effects.
 
         Events are printed by _on_change, which can be overridden in a subclass

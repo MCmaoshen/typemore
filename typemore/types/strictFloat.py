@@ -106,6 +106,9 @@ class StrictFloat(float):
     def __pos__(self):
         return self
 
+    def __hash__(self):
+        return hash(self._dec)
+
     def __abs__(self):
         return StrictFloat(float(abs(self._dec)))
 
@@ -162,3 +165,6 @@ class StrictFloat(float):
         if isinstance(other, StrictFloat):
             return self._dec >= other._dec
         return self._dec >= Decimal(str(other))
+
+a = StrictFloat(1.2)
+print({a: 1})
