@@ -165,6 +165,3 @@ class StrictFloat(float):
         if isinstance(other, StrictFloat):
             return self._dec >= other._dec
         return self._dec >= Decimal(str(other))
-
-a = StrictFloat(1.2)
-print({a: 1})

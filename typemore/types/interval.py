@@ -335,9 +335,3 @@ class Interval:
 
     def __neg__(self) -> 'Interval':
         return Interval(self.right, -self.end, -self.start, self.left)
-
-
-a = Interval(True, 1, 20, True)
-b = Interval(True, -10, 200, False)
-
-print(a+b)
